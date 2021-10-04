@@ -1,0 +1,66 @@
+
+- tạo máy cài wordpress ,cnd.
+-tạo elasticache
+-chỉnh security group: cổng 11211
+-chỉnh máy cổng 11211.
+- chạy lệnh tải memcache:
+
+1:  wget https://elasticache-downloads.s3.amazonaws.com/ClusterClient/PHP-7.0/latest-64bit
+2:  tar -zxvf latest-64bit
+3:  sudo cp artifact/amazon-elasticache-cluster-client.so /home/bitnami/stack/php/lib/php/extensions/
+4:  sudo echo 'extension=amazon-elasticache-cluster-client.so' >> /home/bitnami/stack/php/etc/php.ini
+5:  sudo reboot
+
+- mở trang wordpress để intall w3 total cache
+- mở lại putty để cấp quyền:
+chmod 777 /home/bitnami/stack/wordpress/*
+
+- tạo target groups để làm balancers
+- launch configurations để làm auto scaling groups.
+
+
+
+- bật thêm máy bằng alarm:
++ chọn status checkfail
++ thời gian ở alarm là 60s
++ gather 2 thời gian 60s
++ chon creat ở autoscaling 
++ chọn stepsimple
++ chọn alarm đã tạo
++ chọn add 1 : khi when 2 >= status checkfail.
++ nếu ra giống:
+them
+
+Policy type:
+Step scaling
+Enabled or disabled?
+Enabled
+Execute policy when:
+them
+breaches the alarm threshold: StatusCheckFailed < 2 for 1 consecutive periods of 60 seconds for the metric dimensions:
+InstanceId = i-015738f3f49b40742
+Take the action:
+Add 1 capacity units when 2 >= StatusCheckFailed > -infinity
+Instances need:
+20 seconds to warm up after each step
+(họ
+
+Loại chính sách:
+Chia tỷ lệ bước
+Bật hay tắt?
+Đã bật
+Thực thi chính sách khi:
+họ
+vi phạm ngưỡng cảnh báo: StatusCheckFailed <2 trong 1 khoảng thời gian liên tiếp 60 giây đối với các thứ nguyên chỉ số:
+InstanceId = i-015738f3f49b40742
+Thực hiện hành động:
+Thêm 1 đơn vị dung lượng khi 2> = StatusCheckFailed> -infinity
+Các phiên bản cần:
+20 giây để khởi động sau mỗi bước)
+
+
+- xóa đi khi bị dư:
+
+
+
+

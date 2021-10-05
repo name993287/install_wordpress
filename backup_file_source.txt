@@ -1,0 +1,42 @@
+#bucket
+# install
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+aws configure 
+ 
+#backupfile:
+DBUSER='' #mysql DB username
+DBPASSWD='' #mysql DB username
+DBNAME='' #mysql DB name
+HOST='localhost' #mysql DB hostname or ip
+OUTPUT="/home/bitnami/backups"
+BUCKETNAME='' #bucketname
+DATE=`date +%Y-%m-%d`
+DATEDEL=`date --date="7 days ago" +%F`
+
+rm -f $OUTPUT*.gz > /dev/null 2>&1
+mysqldump --force --opt --user=$DBUSER --password=$DBPASSWD -h$HOST --databases $DBNAME > $OUTPUT/$DATE.$DBNAME.sql
+gzip $OUTPUT/$DATE.$DBNAME.sql
+
+aws s3 cp $OUTPUT/$DATE.$DBNAME.sql.gz s3://$BUCKETNAME/
+aws s3 rm s3://$BUCKETNAME/$DATEDEL.$DBNAME.sql.gz #remove old
+
+
+
++ backuosource:
+
+OUTPUT="/home/bitnami/backups-source"
+BUCKETNAME='' #bucketname
+DATE=`date +%Y-%m-%d`
+DATEDEL=`date --date="7 days ago" +%F`
+tar -zcvf $OUTPUT/source.$DATE.tar.gz /home/bitnami/stack/wordpress
+aws s3 cp $OUTPUT/source.$DATE.tar.gz s3://$BUCKETNAME/
+
+#HCM
+timedatectl set-timezone Asia/Ho_Chi_Minh
+timedateclt
+crontab -e  cấp quyền  backupfile và backupsource ( chmod 777)
+0 3 * * * /home/bitnami/backup-db-to-amazone-s3-cli.sh >/dev/null 2>&1
+

@@ -1,0 +1,5 @@
+1:  wget https://elasticache-downloads.s3.amazonaws.com/ClusterClient/PHP-7.0/latest-64bit
+2:  tar -zxvf latest-64bit
+3:  sudo cp artifact/amazon-elasticache-cluster-client.so /home/bitnami/stack/php/lib/php/extensions/
+4:  sudo echo 'extension=amazon-elasticache-cluster-client.so' >> /home/bitnami/stack/php/etc/php.ini
+5:  sudo reboot
